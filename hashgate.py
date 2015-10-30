@@ -49,8 +49,6 @@ def check_files(cache_file, path_to_files, vt_key):
         if fpath not in hash_cache:
             new_files.append(fpath)
     if vt_key != False:
-        for fpath in deleted_files:
-            check_virustotal(hash_cache[fpath], fpath, vt_key)
         for fpath in changed_files:
             check_virustotal(hash_cache[fpath], fpath, vt_key)
         for fpath in new_files:
