@@ -110,6 +110,12 @@ def check_virustotal(filehash, fpath, vt_key):
         vt_results.append(fpath+', VirusTotal Result: '+json_data['permalink'])
     time.sleep(15) # VirusTotal only allows 4 requests per minute
 
+def check_path(path_to_files):
+    if os.path.isdir(path_to_files):
+        return(True)
+    else:
+        return(False)
+
 def report_results():
     if new_files:
         print('The following new files were created:')
@@ -147,7 +153,11 @@ if __name__ == '__main__':
         use_whitelist = True
         whitelist_file = args.whitelist
     cache_file = args.cache
-    path_to_files = args.files
+    if check_path(args.files):
+        path_to_files = args.files
+    else:
+        print('Invalid directory path specified!')
+        exit(1)
     if args.task == 'check':
         # Check VirusTotal
         if args.virustotal:
