@@ -16,7 +16,7 @@ delimiter = '|' # Choose the delimiter in the cache file, if you have a pipe sym
 #                              AND HERE                              #
 ######################################################################
 
-import os, hashlib, argparse, time, urllib, urllib2, json
+import os, hashlib, argparse, time, urllib, urllib2, json, glob
 # Using md5 as it's an inbuilt hashlib function, there's better algorithms for speed with low collisions,
 # however they're not easily cross platform compatible.
 # Would rather use requests than urllib, but it's not a standard package :(
@@ -84,7 +84,12 @@ def load_whitelist(): # The whitelist file should be full paths to the files to 
     try:
         open_whitelist_file = open(whitelist_file, 'r') # Loads the whitelist into a tuple
         for line in open_whitelist_file:
-            whitelist.append(line.rstrip('\n'))
+            if not line.startswith('#'):
+                expanded = glob.glob(line.rstrip('\n')) # Expand out wildcards in our whitelist file
+                # We can't do a recursive glob in Python 2 :(
+                # The wildcard whitelist entries will only traverse one directory
+                for x in expanded:
+                    whitelist.append(x)
         open_whitelist_file.close()
     except IOError:
         print('Error: Could not read whitelist file!')

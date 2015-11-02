@@ -1,0 +1,5 @@
+# The whitelist allows wildcards, and should be formatted like the following (without comments obviously):
+# An update task will have to be run after changes to the whitelist.
+#/home/site_user/public_html/logs/*
+#/home/site_user/public_html/cache.file
+#/home/site_user/public_html/file.*
