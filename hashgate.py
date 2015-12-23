@@ -16,10 +16,9 @@ delimiter = '|' # Choose the delimiter in the cache file, if you have a pipe sym
 #                              AND HERE                              #
 ######################################################################
 
-import os, hashlib, argparse, time, urllib, urllib2, json, glob
+import os, hashlib, argparse, time, glob, requests
 # Using md5 as it's an inbuilt hashlib function, there's better algorithms for speed with low collisions,
 # however they're not easily cross platform compatible.
-# Would rather use requests than urllib, but it's not a standard package :(
 
 deleted_files = []
 new_files = []
@@ -99,21 +98,15 @@ def load_whitelist(): # The whitelist file should be full paths to the files to 
 def check_virustotal(filehash, fpath, vt_key):
     # This submits the file hash to VT to see if it's been previously flagged as malicious, it doesn't submit new files to VT.
     endpoint = 'https://www.virustotal.com/vtapi/v2/file/report'
-    parameters = {'resource': filehash, 'apikey': vt_key}
-    data = urllib.urlencode(parameters)
-    try:
-        req = urllib2.Request(endpoint, data)
-        response = urllib2.urlopen(req)
-        json_data = json.loads(response.read())
-    except urllib2.HTTPError, err:
-        if err.code == 403:
-            print('Invalid VirusTotal API Key!')
-        else:
-            print('VirusTotal API Error!')
+    r = requests.post(endpoint, {'resource': filehash, 'apikey': vt_key})
+    if r.status_code == 403:
+        print('Invalid VirusTotal API Key!')
         exit(1)
-    if json_data['response_code'] == 1 and json_data['positives'] > 0: # We should only flag if VT finds more than 1 positive scan result
-        vt_results.append(fpath+', VirusTotal Result: '+json_data['permalink'])
-    time.sleep(15) # VirusTotal only allows 4 requests per minute
+    elif r.status_code == 200:
+        json_data = r.json()
+        if json_data['response_code'] == 1 and json_data['positives'] > 0: # We should only flag if VT finds more than 1 positive scan result
+            vt_results.append(fpath+', VirusTotal Result: '+json_data['permalink'])
+        time.sleep(15) # VirusTotal only allows 4 requests per minute
 
 def check_path(path_to_files):
     if os.path.isdir(path_to_files):
