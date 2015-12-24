@@ -100,13 +100,15 @@ def check_virustotal(filehash, fpath, vt_key):
     endpoint = 'https://www.virustotal.com/vtapi/v2/file/report'
     r = requests.post(endpoint, {'resource': filehash, 'apikey': vt_key})
     if r.status_code == 403:
-        print('Invalid VirusTotal API Key!')
+        print('Error: Invalid VirusTotal API Key!')
         exit(1)
     elif r.status_code == 200:
         json_data = r.json()
         if json_data['response_code'] == 1 and json_data['positives'] > 0: # We should only flag if VT finds more than 1 positive scan result
             vt_results.append(fpath+', VirusTotal Result: '+json_data['permalink'])
         time.sleep(15) # VirusTotal only allows 4 requests per minute
+    else:
+        print('Error: An unknown response was received from VirusTotal!')
 
 def check_path(path_to_files):
     if os.path.isdir(path_to_files):
