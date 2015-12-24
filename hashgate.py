@@ -109,6 +109,7 @@ def check_virustotal(filehash, fpath, vt_key):
         time.sleep(15) # VirusTotal only allows 4 requests per minute
     else:
         print('Error: An unknown response was received from VirusTotal!')
+        exit(1)
 
 def check_path(path_to_files):
     if os.path.isdir(path_to_files):
