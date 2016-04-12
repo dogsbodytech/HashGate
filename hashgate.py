@@ -1,22 +1,8 @@
 #!/usr/bin/python
-######################################################################
-#                                                                    #
-#  HashGate - File Hash checker                                      #
-#  Version 1.00                                                      #
-#  Lasted Edited on 28 Oct 2015                                      #
-#  Usage: ./hashgate.py -h                                           #
-#                                                                    #
-######################################################################
-#                         EDIT BETWEEN HERE                          #
-######################################################################
 
 delimiter = '|' # Choose the delimiter in the cache file, if you have a pipe symbol in file names you should change this
 
-######################################################################
-#                              AND HERE                              #
-######################################################################
-
-import os, hashlib, argparse, time, glob, requests
+import os, hashlib, argparse, time, glob, requests, glob2
 # Using md5 as it's an inbuilt hashlib function, there's better algorithms for speed with low collisions,
 # however they're not easily cross platform compatible.
 
@@ -84,7 +70,7 @@ def load_whitelist(): # The whitelist file should be full paths to the files to 
         open_whitelist_file = open(whitelist_file, 'r') # Loads the whitelist into a tuple
         for line in open_whitelist_file:
             if not line.startswith('#'):
-                expanded = glob.glob(line.rstrip('\n')) # Expand out wildcards in our whitelist file
+                expanded = glob2.glob(line.rstrip('\n')) # Expand out wildcards in our whitelist file
                 # We can't do a recursive glob in Python 2 :(
                 # The wildcard whitelist entries will only traverse one directory
                 for x in expanded:
