@@ -2,7 +2,7 @@
 
 delimiter = '|' # Choose the delimiter in the cache file, if you have a pipe symbol in file names you should change this
 
-import os, hashlib, argparse, time, glob, requests, glob2
+import os, hashlib, argparse, time, requests
 # Using md5 as it's an inbuilt hashlib function, there's better algorithms for speed with low collisions,
 # however they're not easily cross platform compatible.
 
@@ -55,11 +55,20 @@ def update_hashes(cache_file, path_to_files):
 def get_hashes(path_to_files):
     file_hashes = {}
     whitelist = load_whitelist()
+    if len(whitelist) == 0:
+        whitelist = False
     for root, directories, filenames in os.walk(path_to_files):
         for filename in filenames:
             file_path = os.path.join(root,filename)
-            if file_path not in whitelist:
-                file_hashes[file_path] = hashlib.md5(open(file_path, 'rb').read()).hexdigest() # Stores the file path and hash sum in a dictionary for writing to file
+            if whitelist == False:
+                file_hashes[file_path] = hashlib.md5(open(file_path, 'rb').read()).hexdigest()
+            else:
+                whitelist_filepath = False
+                for w_path in whitelist:
+                    if w_path in file_path:
+                        whitelist_filepath = True
+                if whitelist_filepath == False:
+                    file_hashes[file_path] = hashlib.md5(open(file_path, 'rb').read()).hexdigest() # Stores the file path and hash sum in a dictionary for writing to file
     return(file_hashes)
 
 def load_whitelist(): # The whitelist file should be full paths to the files to ignore on seperate lines
@@ -70,11 +79,7 @@ def load_whitelist(): # The whitelist file should be full paths to the files to 
         open_whitelist_file = open(whitelist_file, 'r') # Loads the whitelist into a tuple
         for line in open_whitelist_file:
             if not line.startswith('#'):
-                expanded = glob2.glob(line.rstrip('\n')) # Expand out wildcards in our whitelist file
-                # We can't do a recursive glob in Python 2 :(
-                # The wildcard whitelist entries will only traverse one directory
-                for x in expanded:
-                    whitelist.append(x)
+                whitelist.append(line.rstrip('\n'))
         open_whitelist_file.close()
     except IOError:
         print('Error: Could not read whitelist file!')

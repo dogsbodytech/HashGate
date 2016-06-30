@@ -1,5 +1,5 @@
-# The whitelist allows wildcards, and should be formatted like the following.
+# The whitelist is inclusive, and matches anything after the path.
 # An update task will have to be run after changes to the whitelist.
-/home/site_user/public_html/logs/all_files_in_directory/*
-/home/site_user/public_html/single.file
-/home/site_user/public_html/recursively_from_here/**
+# Some examples..
+/home/site_user/public_html/logs/all_files_in_directory/ # Anything in this directory or subdirectories will be whitelisted.
+/home/site_user/public_html/cache/cache-file # Anything file below the cache directory that starts cache-file, e.g cache-file1 will be whitelisted.
