@@ -1,12 +1,12 @@
-#HashGate
-HashGate is an intrusion detection tool that can be used to detect file modifications in a specified directory.
+# HashGate
+HashGate is an intrusion detection tool that can be used to detect file modifications in a specified directory.  Read [our blog post](https://www.dogsbodytechnology.com/blog/hashgate/) about how and why we made it.
 
-##Synopsis
+## Synopsis
 hashgate.py [-h] -ca CACHE -f FILES -t {update,check} [-w WHITELIST] [-vt VIRUSTOTALAPIKEY]
 
 
-##Description
-#####Required arguments:
+## Description
+##### Required arguments:
 The full path to the cache file
 
 `-ca CACHE, --cache CACHE`
@@ -19,7 +19,7 @@ Specify task to perform
 
 `-t {update,check}, --task {update,check}`
 
-#####Optional arguments:
+##### Optional arguments:
 Show this help message and exit
 
 `-h, --help`
@@ -33,7 +33,7 @@ Specify your VirusTotal API key for checking if modified files have been flagged
 
 `-vt VIRUSTOTAL, --virustotal VIRUSTOTAL`
 
-##Example usage
+## Example usage
 Display Help:
 
 `./hashgate.py -h`
