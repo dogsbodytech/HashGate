@@ -1,5 +1,5 @@
 # HashGate
-HashGate is an intrusion detection tool that can be used to detect file modifications in a specified directory.  Read [our blog post](https://www.dogsbodytechnology.com/blog/hashgate/) about how and why we made it.
+HashGate is an intrusion detection tool that can be used to detect file modifications in a specified directory.  Read [our blog post](https://www.dogsbody.com/blog/hashgate/) about how and why we made it.
 
 ## Synopsis
 hashgate.py [-h] -ca CACHE -f FILES -t {update,check} [-w WHITELIST] [-vt VIRUSTOTALAPIKEY]
